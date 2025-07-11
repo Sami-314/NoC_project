@@ -117,8 +117,8 @@ def get_mesh_endpoint_positions(x1, x2, y1, y2, mesh_dim):
     endpoints = []
     for j in range(mesh_dim):
         for i in range(mesh_dim):
-            x = (x2-x1) * (i+1) / (mesh_dim+1)
-            y = (y2-y1) * (j+1) / (mesh_dim+1)
+            x = (948) * (i+1) / (mesh_dim+1)
+            y = (948) * (j+1) / (mesh_dim+1)
             endpoints.append((x, y))
     return endpoints
 
@@ -223,8 +223,8 @@ def visualize_placement(placements, endpoints=None, save_path=None):
             ax.text(ex + 10, ey + 10, f"EP {idx}", color='red', fontsize=8)
     
     # Set axis limits with some padding
-    ax.set_xlim(0, max([coords[1][0] for coords in placements.values()]) * 1.1)
-    ax.set_ylim(0, max([coords[1][1] for coords in placements.values()]) * 1.1)
+    ax.set_xlim(0, 950)
+    ax.set_ylim(0, 950)
     
     # Add labels and title
     ax.set_xlabel('X position (LUT units)')
