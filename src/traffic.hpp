@@ -90,10 +90,28 @@ protected:
   DigitPermutationTrafficPattern(int nodes, int k, int n, int xr = 1);
 };
 
+//Sami
+struct CustomTrafficEntry {
+  int src;
+  int dst;
+  double inj_rate;
+  int packet_size;
+};
+//Sami
+
+#include <unordered_map>
 class TornadoTrafficPattern : public DigitPermutationTrafficPattern {
 public:
   TornadoTrafficPattern(int nodes, int k, int n, int xr = 1);
   virtual int dest(int source);
+  //Sami
+  bool HasEntry(int source) const;
+  double GetInjectionRate(int source) const;
+  int GetPacketSize(int source) const;
+
+private:
+  std::unordered_map<int, CustomTrafficEntry> _custom_traffic_map;
+//Sami
 };
 
 class NeighborTrafficPattern : public DigitPermutationTrafficPattern {
@@ -172,3 +190,4 @@ public:
 };
 
 #endif
+

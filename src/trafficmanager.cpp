@@ -753,39 +753,50 @@ void TrafficManager::_RetireFlit( Flit *f, int dest )
 
 int TrafficManager::_IssuePacket( int source, int cl )
 {
-    int result = 0;
-    if(_use_read_write[cl]){ //use read and write
-        //check queue for waiting replies.
-        //check to make sure it is on time yet
-        if (!_repliesPending[source].empty()) {
-            if(_repliesPending[source].front()->time <= _time) {
-                result = -1;
-            }
-        } else {
+    // int result = 0;
+    // if(_use_read_write[cl]){ //use read and write
+    //     //check queue for waiting replies.
+    //     //check to make sure it is on time yet
+    //     if (!_repliesPending[source].empty()) {
+    //         if(_repliesPending[source].front()->time <= _time) {
+    //             result = -1;
+    //         }
+    //     } else {
       
-            //produce a packet
-            if(_injection_process[cl]->test(source)) {
+    //         //produce a packet
+    //         if(_injection_process[cl]->test(source)) {
 	
-                //coin toss to determine request type.
-                result = (RandomFloat() < _write_fraction[cl]) ? 2 : 1;
+    //             //coin toss to determine request type.
+    //             result = (RandomFloat() < _write_fraction[cl]) ? 2 : 1;
 	
-                _requestsOutstanding[source]++;
-            }
-        }
-    } else { //normal mode
-        result = _injection_process[cl]->test(source) ? 1 : 0;
-        _requestsOutstanding[source]++;
-    } 
-    if(result != 0) {
-        _packet_seq_no[source]++;
+    //             _requestsOutstanding[source]++;
+    //         }
+    //     }
+    // } else { //normal mode
+    //     result = _injection_process[cl]->test(source) ? 1 : 0;
+    //     _requestsOutstanding[source]++;
+    // } 
+    // if(result != 0) {
+    //     _packet_seq_no[source]++;
+    // }
+    // return result;
+
+    //Sami
+    auto tp = dynamic_cast<TornadoTrafficPattern *>(_traffic_pattern[cl]);
+    if (tp && tp->HasEntry(source)) {
+        double inj_rate = tp->GetInjectionRate(source);
+        return (RandomFloat() < inj_rate) ? 4 : 0;
     }
-    return result;
+
+    // fallback 제거
+    return 0;
+    //Sami
 }
 
 void TrafficManager::_GeneratePacket( int source, int stype, 
                                       int cl, int time )
 {   // Sami
-    if (cl >= _traffic_pattern.size()) {
+    if ((unsigned)cl >= _traffic_pattern.size()) {
         std::cerr << "[ERROR] class index " << cl << " out of range!" << std::endl;
         exit(1);
     }
@@ -806,7 +817,19 @@ void TrafficManager::_GeneratePacket( int source, int stype,
     assert(stype!=0);
 
     Flit::FlitType packet_type = Flit::ANY_TYPE;
-    int size = _GetNextPacketSize(cl); //input size 
+    // int size = _GetNextPacketSize(cl); //input size 
+    
+    //Sami
+    int size;
+    TornadoTrafficPattern* tp = dynamic_cast<TornadoTrafficPattern*>(_traffic_pattern[cl]);
+
+    if (tp && tp->HasEntry(source)) {
+        size = tp->GetPacketSize(source);  // 🎯 커스텀 packet size 적용
+    } else {
+        size = _GetNextPacketSize(cl);     // fallback: 기존 default size
+    }
+    //Sami
+
     int pid = _cur_pid++;
     assert(_cur_pid);
     int packet_destination = _traffic_pattern[cl]->dest(source);

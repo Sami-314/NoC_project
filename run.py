@@ -4,6 +4,7 @@ import json
 import math
 import random
 import argparse
+import shutil
 
 #lets assume 948x948 LUTs, into 6-> each bit represents 138 LUT widths 
 
@@ -106,9 +107,81 @@ def calculate_placement(data):
         placements[block_id] = [(x1, y1), (x2, y2)]
     
     return placements
+
+def get_bounding_box(placements):
+    x_coords = [coord[0][0] for coord in placements.values()] + [coord[1][0] for coord in placements.values()]
+    y_coords = [coord[0][1] for coord in placements.values()] + [coord[1][1] for coord in placements.values()]
+    return min(x_coords), max(x_coords), min(y_coords), max(y_coords)
+
+def get_mesh_endpoint_positions(x1, x2, y1, y2, mesh_dim):
+    endpoints = []
+    for j in range(mesh_dim):
+        for i in range(mesh_dim):
+            x = (x2-x1) * (i+1) / (mesh_dim+1)
+            y = (y2-y1) * (j+1) / (mesh_dim+1)
+            endpoints.append((x, y))
+    return endpoints
+
+def assign_endpoints_to_single_block(placements, mesh_dim):
+    x1, x2, y1, y2 = get_bounding_box(placements)
+    endpoints = get_mesh_endpoint_positions(x1, x2, y1, y2, mesh_dim)
+    
+    endpoint_to_block = {}
+
+    for eid, (ex, ey) in enumerate(endpoints):
+        block_found = None
+        for block_id, ((bx1, by1), (bx2, by2)) in placements.items():
+            if bx1 <= ex <= bx2 and by1 <= ey <= by2:
+                block_found = block_id
+                break 
+        endpoint_to_block[eid] = block_found 
+
+    return endpoint_to_block
+
+def sweep_mesh_granularity(placements, project_root):
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as patches
+
+    output_root = os.path.join(project_root, 'granularity_iteration')
+
+    if os.path.exists(output_root):
+        shutil.rmtree(output_root)
+    os.makedirs(output_root)
+
+    for mesh_dim in range(1, 30):
+        subdir = os.path.join(output_root, f"{mesh_dim}x{mesh_dim}_granularity")
+        os.makedirs(subdir, exist_ok=True)
+
+        # Assign endpoint-block mapping
+        endpoint_block_map = assign_endpoints_to_single_block(placements, mesh_dim)
+        endpoint_coords = get_mesh_endpoint_positions(*get_bounding_box(placements), mesh_dim)
+
+        # block_id → [endpoint_id]
+        block_to_endpoints = {}
+        for eid, block_id in endpoint_block_map.items():
+            if block_id is not None:
+                block_to_endpoints.setdefault(block_id, []).append(eid)
+
+        
+        # if len(block_to_endpoints) != len(placements):
+        #     shutil.rmtree(subdir)
+        #     continue
+    
+        # Save text file
+        txt_path = os.path.join(subdir, "block_to_endpoints.txt")
+        with open(txt_path, "w") as f:
+            for block_id in sorted(block_to_endpoints.keys()):
+                endpoints = block_to_endpoints[block_id]
+                f.write(f"Block_{block_id} Endpoints = {endpoints}\n")
+
+        png_path = os.path.join(subdir, "placement.png")
+        visualize_placement(placements, endpoint_coords, save_path=png_path)
+
         
 
-def visualize_placement(placements):
+        
+
+def visualize_placement(placements, endpoints=None, save_path=None):
     """
     Visualizes the block placements.
     
@@ -142,6 +215,12 @@ def visualize_placement(placements):
         # Add block ID as text in the center of the rectangle
         ax.text(x1 + width/2, y1 + height/2, f"ID: {block_id}", 
                 ha='center', va='center', fontsize=10, color='black')
+
+    # Optional: draw endpoints
+    if endpoints:
+        for idx, (ex, ey) in enumerate(endpoints):
+            ax.plot(ex, ey, 'rx')  # Red X marker
+            ax.text(ex + 10, ey + 10, f"EP {idx}", color='red', fontsize=8)
     
     # Set axis limits with some padding
     ax.set_xlim(0, max([coords[1][0] for coords in placements.values()]) * 1.1)
@@ -157,7 +236,12 @@ def visualize_placement(placements):
     
     # Show the plot
     plt.tight_layout()
-    plt.show()
+    
+    if save_path:
+        plt.savefig(save_path)
+        plt.close()
+    else:
+        plt.show()
 
 # Add this to your main function:
 def main():
@@ -188,6 +272,8 @@ def main():
     print("ID:Placement Pairs:")
     for block_id, coords in placements.items():
         print(f"ID {block_id}: {coords}")
+
+    sweep_mesh_granularity(placements, project_root)
     
     # Visualize the placements only if not disabled
     if not args.no_visualize:

@@ -286,13 +286,26 @@ DigitPermutationTrafficPattern::DigitPermutationTrafficPattern(int nodes, int k,
   
 }
 
+#include <fstream>
+#include <unordered_map>
+
 TornadoTrafficPattern::TornadoTrafficPattern(int nodes, int k, int n, int xr)
   : DigitPermutationTrafficPattern(nodes, k, n, xr)
-{
+{ //Sami
+  std::ifstream infile("custom_traffic.txt");
+  if (!infile.is_open()) {
+    std::cerr << "[ERROR] Could not open custom_traffic.txt" << std::endl;
+    exit(1);
+  }
 
+  int src, dst, pkt_size;
+  double inj_rate;
+  while (infile >> src >> dst >> inj_rate >> pkt_size) {
+    _custom_traffic_map[src] = {src, dst, inj_rate, pkt_size};
+  }
+  //Sami
 }
 
-#include <fstream>
 int TornadoTrafficPattern::dest(int source)
 {
   // assert((source >= 0) && (source < _nodes));
@@ -308,23 +321,12 @@ int TornadoTrafficPattern::dest(int source)
   // return result;
 
   // Sami
-  std::ifstream infile("custom_traffic.txt");
-  if (!infile.is_open()) {
-    std::cerr << "Error: Unable to open custom_traffic.txt" << std::endl;
-    return -1; // fallback value
+  auto it = _custom_traffic_map.find(source);
+  if (it != _custom_traffic_map.end()) {
+    return it->second.dst;
+  } else {
+    return -1; // no injection
   }
-
-  int src, dst;
-  while (infile >> src >> dst) {
-    if (src == source) {
-      infile.close();
-      return dst;
-    }
-  }
-
-  infile.close();
-  std::cerr << "Warning: No destination found for source " << source << " in custom_traffic.txt" << std::endl;
-  return -1; // fallback value
   // Sami
 }
 
@@ -545,3 +547,19 @@ int HotSpotTrafficPattern::dest(int source)
   assert(_rates.back() > pct);
   return _hotspots.back();
 }
+
+//Sami
+bool TornadoTrafficPattern::HasEntry(int source) const {
+  return _custom_traffic_map.find(source) != _custom_traffic_map.end();
+}
+
+double TornadoTrafficPattern::GetInjectionRate(int source) const {
+  auto it = _custom_traffic_map.find(source);
+  return (it != _custom_traffic_map.end()) ? it->second.inj_rate : 0.0;
+}
+
+int TornadoTrafficPattern::GetPacketSize(int source) const {
+  auto it = _custom_traffic_map.find(source);
+  return (it != _custom_traffic_map.end()) ? it->second.packet_size : 1;
+}
+//Sami
