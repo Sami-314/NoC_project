@@ -784,7 +784,25 @@ int TrafficManager::_IssuePacket( int source, int cl )
 
 void TrafficManager::_GeneratePacket( int source, int stype, 
                                       int cl, int time )
-{
+{   // Sami
+    if (cl >= _traffic_pattern.size()) {
+        std::cerr << "[ERROR] class index " << cl << " out of range!" << std::endl;
+        exit(1);
+    }
+    if (source >= _nodes) {
+        std::cerr << "[ERROR] source index " << source << " out of valid node range!" << std::endl;
+        exit(1);
+    }
+
+    int dest = _traffic_pattern[cl]->dest(source);
+    if (dest < 0 || dest >= _nodes) {
+        // no inject
+        return;
+    }
+
+    std::cout << "[Inject] src: " << source << " -> dst: " << dest << " @ time: " << time << std::endl;
+    // Sami
+
     assert(stype!=0);
 
     Flit::FlitType packet_type = Flit::ANY_TYPE;

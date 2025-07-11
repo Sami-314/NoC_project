@@ -1,0 +1,134 @@
+[
+  {
+    "ID": 0,
+    "IP": "HDMI-Rx Sub-sys (4K60 Rx, 4 ppc)",
+    "LUT": 6000,
+    "FF": 8000,
+    "DSP": 0,
+    "BW_OUT": 500,
+    "BW_IN": 1125,
+    "Placement": "0000001",
+    "Network Traffic": [0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "ID": 1,
+    "IP": "Sensor Demosaic v1.1",
+    "LUT": 11164,
+    "FF": 16867,
+    "DSP": 16,
+    "BW_OUT": 900,
+    "BW_IN": 300,
+    "Placement": "0000010",
+    "Network Traffic": [0, 0, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "ID": 2,
+    "IP": "Gamma LUT",
+    "LUT": 2232,
+    "FF": 2082,
+    "DSP": 0,
+    "BW_OUT": 900,
+    "BW_IN": 900,
+    "Placement": "0000010",
+    "Network Traffic": [0, 0, 0, 900, 0, 0, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "ID": 3,
+    "IP": "VPSS (Scaler + CSC)",
+    "LUT": 11510,
+    "FF": 15176,
+    "DSP": 176,
+    "BW_OUT": 500,
+    "BW_IN": 900,
+    "Placement": "0001100",
+    "Network Traffic": [0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "ID": 4,
+    "IP": "VDMA-Write (v_frmbuf_wr)",
+    "LUT": 5702,
+    "FF": 13518,
+    "DSP": 0,
+    "BW_OUT": 500,
+    "BW_IN": 500,
+    "Placement": "1000000",
+    "Network Traffic": [0, 0, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "ID": 5,
+    "IP": "DDR-FB (Video frame-buffer)",
+    "LUT": null,
+    "FF": null,
+    "DSP": null,
+    "BW_OUT": 1000,
+    "BW_IN": 500,
+    "Placement": "1000000",
+    "Network Traffic": [0, 0, 0, 0, 0, 0, 500, 0, 500, 0, 0, 0]
+  },
+  {
+    "ID": 6,
+    "IP": "AIE-DMA (PL shim)",
+    "LUT": 1000,
+    "FF": 1200,
+    "DSP": 0,
+    "BW_OUT": 500,
+    "BW_IN": 500,
+    "Placement": "0100000",
+    "Network Traffic": [0, 0, 0, 0, 0, 0, 0, 500, 0, 0, 0, 0]
+  },
+  {
+    "ID": 7,
+    "IP": "AI Engine array (≈ 400 tiles)",
+    "LUT": null,
+    "FF": null,
+    "DSP": null,
+    "BW_OUT": 5,
+    "BW_IN": 500,
+    "Placement": "0110000",
+    "Network Traffic": [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "ID": 8,
+    "IP": "VDMA-Read (v_frmbuf_rd)",
+    "LUT": 5659,
+    "FF": 10222,
+    "DSP": 0,
+    "BW_OUT": 500,
+    "BW_IN": 500,
+    "Placement": "1100000",
+    "Network Traffic": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 500, 0]
+  },
+  {
+    "ID": 9,
+    "IP": "DDR-OL (Graphics / overlay buffer)",
+    "LUT": null,
+    "FF": null,
+    "DSP": null,
+    "BW_OUT": 250,
+    "BW_IN": 0,
+    "Placement": "1000000",
+    "Network Traffic": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 250, 0]
+  },
+  {
+    "ID": 10,
+    "IP": "Video Mixer (8-layer)",
+    "LUT": 12000,
+    "FF": 20000,
+    "DSP": 32,
+    "BW_OUT": 500,
+    "BW_IN": 750,
+    "Placement": "0000011",
+    "Network Traffic": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 500]
+  },
+  {
+    "ID": 11,
+    "IP": "HDMI-Tx Sub-sys (4K60 Tx)",
+    "LUT": 5000,
+    "FF": 7000,
+    "DSP": 0,
+    "BW_OUT": 0,
+    "BW_IN": 500,
+    "Placement": "0000001",
+    "Network Traffic": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
+]

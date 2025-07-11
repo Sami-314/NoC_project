@@ -1,0 +1,48 @@
+BEGIN Configuration File: /home/s65oh/booksim2/runfiles/mesh_k5_inj0.15_pkt12.cfg
+topology = mesh;
+k = 5;
+n = 2;
+routing_function = dor;
+traffic = uniform;
+packet_size = 12;
+injection_rate = 0.15;
+sim_count = 100000;
+warmup_periods = 1000;
+
+END Configuration File: /home/s65oh/booksim2/runfiles/mesh_k5_inj0.15_pkt12.cfg
+Class 0:
+Packet latency average = 351.295
+	minimum = 28
+	maximum = 894
+Network latency average = 120.558
+	minimum = 22
+	maximum = 806
+Slowest packet = 232
+Flit latency average = 81.8618
+	minimum = 7
+	maximum = 789
+Slowest flit = 2795
+Fragmentation average = 59.505
+	minimum = 0
+	maximum = 558
+Injected packet rate average = 0.05632
+	minimum = 0.043 (at node 11)
+	maximum = 0.072 (at node 0)
+Accepted packet rate average = 0.04776
+	minimum = 0.04 (at node 2)
+	maximum = 0.054 (at node 17)
+Injected flit rate average = 0.67276
+	minimum = 0.514 (at node 11)
+	maximum = 0.858 (at node 0)
+Accepted flit rate average= 0.60368
+	minimum = 0.503 (at node 2)
+	maximum = 0.69 (at node 19)
+Injected packet length average = 11.9453
+Accepted packet length average = 12.6399
+Total in-flight flits = 1804 (0 measured)
+latency change    = 1
+throughput change = 1
+Average latency for class 0 exceeded 500 cycles. Aborting simulation.
+Too many sample periods needed to converge
+Simulation unstable, ending ...
+Total run time 0.0870509

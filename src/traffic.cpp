@@ -292,19 +292,40 @@ TornadoTrafficPattern::TornadoTrafficPattern(int nodes, int k, int n, int xr)
 
 }
 
+#include <fstream>
 int TornadoTrafficPattern::dest(int source)
 {
-  assert((source >= 0) && (source < _nodes));
+  // assert((source >= 0) && (source < _nodes));
 
-  int offset = 1;
-  int result = 0;
+  // int offset = 1;
+  // int result = 0;
 
-  for(int n = 0; n < _n; ++n) {
-    result += offset *
-      (((source / offset) % (_xr * _k) + ((_xr * _k + 1) / 2 - 1)) % (_xr * _k));
-    offset *= (_xr * _k);
+  // for(int n = 0; n < _n; ++n) {
+  //   result += offset *
+  //     (((source / offset) % (_xr * _k) + ((_xr * _k + 1) / 2 - 1)) % (_xr * _k));
+  //   offset *= (_xr * _k);
+  // }
+  // return result;
+
+  // Sami
+  std::ifstream infile("custom_traffic.txt");
+  if (!infile.is_open()) {
+    std::cerr << "Error: Unable to open custom_traffic.txt" << std::endl;
+    return -1; // fallback value
   }
-  return result;
+
+  int src, dst;
+  while (infile >> src >> dst) {
+    if (src == source) {
+      infile.close();
+      return dst;
+    }
+  }
+
+  infile.close();
+  std::cerr << "Warning: No destination found for source " << source << " in custom_traffic.txt" << std::endl;
+  return -1; // fallback value
+  // Sami
 }
 
 NeighborTrafficPattern::NeighborTrafficPattern(int nodes, int k, int n, int xr)

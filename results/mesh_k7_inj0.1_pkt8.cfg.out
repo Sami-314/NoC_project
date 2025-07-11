@@ -1,0 +1,80 @@
+BEGIN Configuration File: /home/s65oh/booksim2/runfiles/mesh_k7_inj0.1_pkt8.cfg
+topology = mesh;
+k = 7;
+n = 2;
+routing_function = dor;
+traffic = uniform;
+packet_size = 8;
+injection_rate = 0.1;
+sim_count = 100000;
+warmup_periods = 1000;
+
+END Configuration File: /home/s65oh/booksim2/runfiles/mesh_k7_inj0.1_pkt8.cfg
+Class 0:
+Packet latency average = 214.905
+	minimum = 14
+	maximum = 839
+Network latency average = 190.772
+	minimum = 14
+	maximum = 835
+Slowest packet = 646
+Flit latency average = 156.722
+	minimum = 7
+	maximum = 828
+Slowest flit = 5203
+Fragmentation average = 68.0849
+	minimum = 0
+	maximum = 533
+Injected packet rate average = 0.0767755
+	minimum = 0.06 (at node 22)
+	maximum = 0.098 (at node 45)
+Accepted packet rate average = 0.0548163
+	minimum = 0.04 (at node 37)
+	maximum = 0.067 (at node 47)
+Injected flit rate average = 0.611122
+	minimum = 0.477 (at node 22)
+	maximum = 0.784 (at node 45)
+Accepted flit rate average= 0.460857
+	minimum = 0.353 (at node 4)
+	maximum = 0.562 (at node 47)
+Injected packet length average = 7.95986
+Accepted packet length average = 8.4073
+Total in-flight flits = 7514 (0 measured)
+latency change    = 1
+throughput change = 1
+Class 0:
+Packet latency average = 400.934
+	minimum = 14
+	maximum = 1557
+Network latency average = 274.532
+	minimum = 14
+	maximum = 1493
+Slowest packet = 2128
+Flit latency average = 231.678
+	minimum = 7
+	maximum = 1529
+Slowest flit = 15701
+Fragmentation average = 76.7061
+	minimum = 0
+	maximum = 533
+Injected packet rate average = 0.0681327
+	minimum = 0.049 (at node 30)
+	maximum = 0.098 (at node 24)
+Accepted packet rate average = 0.0566224
+	minimum = 0.0425 (at node 4)
+	maximum = 0.0705 (at node 24)
+Injected flit rate average = 0.543684
+	minimum = 0.39 (at node 30)
+	maximum = 0.781 (at node 24)
+Accepted flit rate average= 0.464082
+	minimum = 0.3485 (at node 4)
+	maximum = 0.5695 (at node 24)
+Injected packet length average = 7.97978
+Accepted packet length average = 8.19607
+Total in-flight flits = 7936 (0 measured)
+latency change    = 0.463989
+throughput change = 0.00694811
+Average latency for class 0 exceeded 500 cycles. Aborting simulation.
+Too many sample periods needed to converge
+Simulation unstable, ending ...
+Total run time 0.421661
