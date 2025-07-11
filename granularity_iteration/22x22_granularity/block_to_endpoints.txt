@@ -1,6 +1,0 @@
-Block_0 Endpoints = [19, 20, 21]
-Block_1 Endpoints = [16, 17, 18, 38, 39, 40]
-Block_3 Endpoints = [9, 10, 11, 12, 13, 14, 15]
-Block_4 Endpoints = [0, 1, 2]
-Block_10 Endpoints = [60, 61, 62, 63, 64, 65]
-Block_11 Endpoints = [85, 86, 87]

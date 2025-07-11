@@ -125,18 +125,30 @@ def get_mesh_endpoint_positions(x1, x2, y1, y2, mesh_dim):
 def assign_endpoints_to_single_block(placements, mesh_dim):
     x1, x2, y1, y2 = get_bounding_box(placements)
     endpoints = get_mesh_endpoint_positions(x1, x2, y1, y2, mesh_dim)
-    
-    endpoint_to_block = {}
 
-    for eid, (ex, ey) in enumerate(endpoints):
-        block_found = None
-        for block_id, ((bx1, by1), (bx2, by2)) in placements.items():
+    block_to_endpoints = {}
+
+    for block_id, ((bx1, by1), (bx2, by2)) in placements.items():
+        assigned_eids = []
+        for eid, (ex, ey) in enumerate(endpoints):
             if bx1 <= ex <= bx2 and by1 <= ey <= by2:
-                block_found = block_id
-                break 
-        endpoint_to_block[eid] = block_found 
+                assigned_eids.append(eid)
 
-    return endpoint_to_block
+        if assigned_eids:
+            block_to_endpoints[block_id] = assigned_eids
+        else:
+            # No endpoints inside → assign nearest one
+            cx, cy = (bx1 + bx2) / 2, (by1 + by2) / 2
+            min_dist = float('inf')
+            closest_eid = None
+            for eid, (ex, ey) in enumerate(endpoints):
+                dist = (cx - ex) ** 2 + (cy - ey) ** 2
+                if dist < min_dist:
+                    min_dist = dist
+                    closest_eid = eid
+            block_to_endpoints[block_id] = [closest_eid]
+
+    return block_to_endpoints, endpoints
 
 def sweep_mesh_granularity(placements, project_root):
     import matplotlib.pyplot as plt
@@ -148,19 +160,13 @@ def sweep_mesh_granularity(placements, project_root):
         shutil.rmtree(output_root)
     os.makedirs(output_root)
 
-    for mesh_dim in range(1, 30):
+    for mesh_dim in range(1, 15):
         subdir = os.path.join(output_root, f"{mesh_dim}x{mesh_dim}_granularity")
         os.makedirs(subdir, exist_ok=True)
 
         # Assign endpoint-block mapping
-        endpoint_block_map = assign_endpoints_to_single_block(placements, mesh_dim)
-        endpoint_coords = get_mesh_endpoint_positions(*get_bounding_box(placements), mesh_dim)
-
-        # block_id → [endpoint_id]
-        block_to_endpoints = {}
-        for eid, block_id in endpoint_block_map.items():
-            if block_id is not None:
-                block_to_endpoints.setdefault(block_id, []).append(eid)
+        block_to_endpoints, endpoint_coords = assign_endpoints_to_single_block(placements, mesh_dim)
+        
 
         
         # if len(block_to_endpoints) != len(placements):

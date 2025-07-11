@@ -1,4 +1,0 @@
-Block_1 Endpoints = [14, 15, 16]
-Block_2 Endpoints = [33, 34, 35]
-Block_8 Endpoints = [0, 1, 2, 3, 4]
-Block_10 Endpoints = [52, 53, 54, 55, 56]
